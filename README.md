@@ -24,4 +24,4 @@ Once all the above is done, it's time to create your admin user
 
 Run `php artisan admin:create` and enter the required details
 
-The system is now ready for use
+The system is now ready for use, navigate to the webpage and proceed to login.
