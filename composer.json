@@ -1,10 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "ronappleton/playlistr",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "A Playlist Management Application Built On The Laravel Framework.",
     "keywords": [
         "framework",
-        "laravel"
+        "laravel",
+        "playlist"
     ],
     "license": "MIT",
     "require": {
