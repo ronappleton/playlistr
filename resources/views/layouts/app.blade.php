@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>InfyOm Generator</title>
+    <title>{!! config('app.name') !!}</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <!-- Bootstrap 3.3.7 -->
@@ -35,7 +35,7 @@
 
             <!-- Logo -->
             <a href="#" class="logo">
-                <b>InfyOm</b>
+                <b>{!! config('app.name') !!}</b>
             </a>
 
             <!-- Header Navbar -->
@@ -47,42 +47,13 @@
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <!-- User Account Menu -->
-                        <li class="dropdown user user-menu">
-                            <!-- Menu Toggle Button -->
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <!-- The user image in the navbar-->
-                                <img src="http://infyom.com/images/logo/blue_logo_150x150.jpg"
-                                     class="user-image" alt="User Image"/>
-                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">{{ Auth::user()->name }}</span>
+                        <li class="nav-item">
+                            <a href="{!! route('logout') !!}" class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="fa fa-sign-out fa-lg" aria-hidden="true"></i>
                             </a>
-                            <ul class="dropdown-menu">
-                                <!-- The user image in the menu -->
-                                <li class="user-header">
-                                    <img src="http://infyom.com/images/logo/blue_logo_150x150.jpg"
-                                         class="img-circle" alt="User Image"/>
-                                    <p>
-                                        {{ Auth::user()->name }}
-                                        <small>Member since {{ Auth::user()->created_at->format('M. Y') }}</small>
-                                    </p>
-                                </li>
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            Sign out
-                                        </a>
-                                        <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                            @csrf
-                                        </form>
-                                    </div>
-                                </li>
-                            </ul>
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -98,7 +69,7 @@
 
         <!-- Main Footer -->
         <footer class="main-footer" style="max-height: 100px;text-align: center">
-            <strong>Copyright © 2016 <a href="#">Company</a>.</strong> All rights reserved.
+            <strong>Copyright © {!! date('Y') !!} <a href="https://github.com/ronappleton">Ron Appleton</a>.</strong> All rights reserved.
         </footer>
 
     </div>
@@ -118,7 +89,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    InfyOm Generator
+                    {!! config('app.name') !!}
                 </a>
             </div>
 
@@ -132,7 +103,6 @@
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
                     <li><a href="{{ url('/login') }}">Login</a></li>
-                    <li><a href="{{ url('/register') }}">Register</a></li>
                 </ul>
             </div>
         </div>
