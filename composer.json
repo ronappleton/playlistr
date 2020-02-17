@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.2",
         "laravelcollective/html": "^6.0",
+        "matejkucera/laravel-ip-restriction": "^1.1",
         "rinvex/laravel-categories": "^3.0"
     },
     "require-dev": {

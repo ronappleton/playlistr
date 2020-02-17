@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        MatejKucera\LaravelIpRestriction\LaravelIpRestrictionServiceProvider::class,
 
         /*
          * Application Service Providers...

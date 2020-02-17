@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e065cbca29f31b00a383732cf27fcb1",
+    "content-hash": "a780ca98f6c2e028c37dde48968900f3",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1446,6 +1446,46 @@
             "time": "2020-02-05T18:14:17+00:00"
         },
         {
+            "name": "matejkucera/laravel-ip-restriction",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://gitlab.vse.cz/phplibs/laravel-ip-restriction",
+                "reference": "69545e10e6c1226aaa34fcde2d99a5443d7375d9"
+            },
+            "require": {
+                "php": "^7.1",
+                "rlanvin/php-ip": "^1.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MatejKucera\\LaravelIpRestriction\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "MatejKucera",
+                    "email": "matej.kucera@vse.cz"
+                }
+            ],
+            "description": "Tiny middleware for Laravel which allows to restrict access to your application only from defined IP addresses and networks.",
+            "homepage": "https://gitlab.vse.cz/phplibs/laravel-ip-restriction",
+            "keywords": [
+                "ip restriction",
+                "laravel"
+            ],
+            "time": "2019-03-29T13:16:04+00:00"
+        },
+        {
             "name": "monolog/monolog",
             "version": "2.0.2",
             "source": {
@@ -2344,6 +2384,43 @@
                 "validator"
             ],
             "time": "2019-12-18T09:02:37+00:00"
+        },
+        {
+            "name": "rlanvin/php-ip",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rlanvin/php-ip.git",
+                "reference": "03e507114b95e2d3a9b9621dc6fb583401afbf5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rlanvin/php-ip/zipball/03e507114b95e2d3a9b9621dc6fb583401afbf5e",
+                "reference": "03e507114b95e2d3a9b9621dc6fb583401afbf5e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gmp": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "IPv4/IPv6 manipulation library for PHP",
+            "homepage": "https://github.com/rlanvin/php-ip",
+            "keywords": [
+                "IP",
+                "ipv4",
+                "ipv6"
+            ],
+            "time": "2015-06-26T06:50:37+00:00"
         },
         {
             "name": "spatie/laravel-schemaless-attributes",
