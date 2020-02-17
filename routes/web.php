@@ -17,4 +17,10 @@ Route::get('/', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->middleware('verified');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/home', 'HomeController@index')->middleware('verified');
+    Route::resource('category', 'CategoryController');
+    Route::resource('playlist', 'PlaylistController');
+    Route::resource('item', 'ItemController');
+});
+
