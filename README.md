@@ -2,6 +2,8 @@
 
 Playlistr is a personalised playlist management system, incorporating categories and multiple playlists, along with IP whitelisting and blacklisting to keep your playlists private.
 
+[![Build Status](https://travis-ci.org/ronappleton/playlistr.svg?branch=master)](https://travis-ci.org/ronappleton/playlistr)
+
 ## Installation
 
 To install simple run `composer install ronappleton\playlistr`
