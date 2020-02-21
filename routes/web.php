@@ -19,8 +19,12 @@ Auth::routes(['verify' => true]);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->middleware('verified');
-    Route::resource('category', 'CategoryController');
-    Route::resource('playlist', 'PlaylistController');
-    Route::resource('item', 'ItemController');
+    Route::resource('playlists', 'PlaylistController');
+    Route::resource('playlistItems', 'PlaylistItemController');
+});
+
+Route::get('m3u', function () {
+    $media = new \App\Helpers\m3u();
+    return response()->json($media->getMedia());
 });
 

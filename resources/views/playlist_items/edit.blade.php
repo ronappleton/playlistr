@@ -3,7 +3,7 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Playlist
+            Playlist Item
         </h1>
    </section>
    <div class="content">
@@ -11,9 +11,9 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="row">
-                   {!! Form::model($playlist, ['route' => ['playlists.update', $playlist->id], 'method' => 'patch']) !!}
+                   {!! Form::model($playlistItem, ['route' => ['playlistItems.update', $playlistItem->id], 'method' => 'patch']) !!}
 
-                        @include('playlists.fields')
+                        @include('playlist_items.fields')
 
                    {!! Form::close() !!}
                </div>

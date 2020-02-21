@@ -1,11 +1,8 @@
-<li class="{!! request()->is('category*') ? ' active' : '' !!}">
-    <a href="{!! route('category.index') !!}">Categories</a>
+<li class="{{ Request::is('playlists*') ? 'active' : '' }}">
+    <a href="{{ route('playlists.index') }}"><i class="fa fa-edit"></i><span>Playlists</span></a>
 </li>
 
-<li class="{!! request()->is('playlist*') ? ' active' : '' !!}">
-    <a href="{!! route('playlist.index') !!}">Playlists</a>
+<li class="{{ Request::is('playlistItems*') ? 'active' : '' }}">
+    <a href="{{ route('playlistItems.index') }}"><i class="fa fa-edit"></i><span>Playlist Items</span></a>
 </li>
 
-<li class="{!! request()->is('item*') ? ' active' : '' !!}">
-    <a href="{!! route('item.index') !!}">Playlist Items</a>
-</li>
