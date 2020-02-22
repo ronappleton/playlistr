@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\m3u;
 use App\Http\Requests\CreatePlaylistItemRequest;
 use App\Http\Requests\UpdatePlaylistItemRequest;
+use App\Http\Requests\UploadM3uFileRequest;
+use App\Http\Requests\UploadM3uUrlRequest;
+use App\Models\PlaylistItem;
 use App\Repositories\PlaylistItemRepository;
-use App\Http\Controllers\AppBaseController;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\View\View;
 use Response;
 
 class PlaylistItemController extends AppBaseController
@@ -24,15 +29,23 @@ class PlaylistItemController extends AppBaseController
      * Display a listing of the PlaylistItem.
      *
      * @param Request $request
-     *
-     * @return Response
+     * @return Factory|View
      */
     public function index(Request $request)
     {
         $playlistItems = $this->playlistItemRepository->all();
 
         return view('playlist_items.index')
-            ->with('playlistItems', $playlistItems);
+          ->with('playlistItems', $playlistItems);
+    }
+
+    public function items($playlistId)
+    {
+        $playlistItems = $this->playlistItemRepository->allQuery(['playlist_id' => $playlistId])->get();
+
+        return view('playlist_items.index')
+          ->with('playlistItems', $playlistItems)
+          ->with('playlistId', $playlistId);
     }
 
     /**
@@ -49,7 +62,6 @@ class PlaylistItemController extends AppBaseController
      * Store a newly created PlaylistItem in storage.
      *
      * @param CreatePlaylistItemRequest $request
-     *
      * @return Response
      */
     public function store(CreatePlaylistItemRequest $request)
@@ -63,11 +75,35 @@ class PlaylistItemController extends AppBaseController
         return redirect(route('playlistItems.index'));
     }
 
+    public function storeBulkUrl(UploadM3UUrlRequest $m3URequest)
+    {
+        $media = new m3u($m3URequest->get('m3uUrl'));
+        $this->storeMedia($m3URequest->get('playlist_id'), $media);
+    }
+
+    public function storeBulkFile(UploadM3UFileRequest $m3URequest)
+    {
+        $media = new m3u($m3URequest->file('m3uFile')->getPathname());
+        $this->storeMedia($m3URequest->get('playlist_id'), $media);
+    }
+
+    private function storeMedia($playlistId, $media)
+    {
+        foreach ($media->yieldMedia() as $playlistItem) {
+            PlaylistItem::updateOrCreate(
+              [
+                'playlist_id' => $playlistId,
+                'name' => $playlistItem['tvtitle'],
+                'url' => $playlistItem['tvmedia'],
+              ]
+            );
+        }
+    }
+
     /**
      * Display the specified PlaylistItem.
      *
      * @param int $id
-     *
      * @return Response
      */
     public function show($id)
@@ -87,7 +123,6 @@ class PlaylistItemController extends AppBaseController
      * Show the form for editing the specified PlaylistItem.
      *
      * @param int $id
-     *
      * @return Response
      */
     public function edit($id)
@@ -106,9 +141,8 @@ class PlaylistItemController extends AppBaseController
     /**
      * Update the specified PlaylistItem in storage.
      *
-     * @param int $id
+     * @param int                       $id
      * @param UpdatePlaylistItemRequest $request
-     *
      * @return Response
      */
     public function update($id, UpdatePlaylistItemRequest $request)
@@ -132,10 +166,8 @@ class PlaylistItemController extends AppBaseController
      * Remove the specified PlaylistItem from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
-     *
      * @return Response
+     * @throws \Exception
      */
     public function destroy($id)
     {

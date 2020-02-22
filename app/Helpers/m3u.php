@@ -31,7 +31,7 @@ class m3u
      *
      * @param string $source
      */
-    public function __construct($source = 'https://raw.githubusercontent.com/onigetoc/iptv-playlists/master/general/tv/us.m3u')
+    public function __construct(string $source)
     {
         $this->getSource($source);
         $this->clean();
@@ -39,9 +39,9 @@ class m3u
     }
 
     /**
-     * @param $source
+     * @param string $source
      */
-    private function getSource($source): void
+    private function getSource(string $source): void
     {
         $this->source = file_get_contents($source);
     }
@@ -52,7 +52,7 @@ class m3u
     private function clean(): void
     {
         $this->source = str_replace('group-title', 'tvgroup', $this->source);
-        $this->source = str_replace("tvg-", "tv", $this->source);
+        $this->source = str_replace('tvg-', 'tv', $this->source);
     }
 
     /**
@@ -74,9 +74,8 @@ class m3u
     {
         $counter = 0;
         foreach ($this->getItems() as $item) {
-
             preg_match(self::REGEX, $item, $matchList);
-            $mediaURL = preg_replace("/[\n\r]/", "", $matchList[3]);
+            $mediaURL = preg_replace("/[\n\r]/", '', $matchList[3]);
             $mediaURL = preg_replace('/\s+/', '', $mediaURL);
 
             $newItem = [

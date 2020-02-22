@@ -20,6 +20,10 @@ Auth::routes(['verify' => true]);
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->middleware('verified');
     Route::resource('playlists', 'PlaylistController');
+    Route::get('playlistItems/{playlistId}', 'PlaylistItemController@items')
+      ->name('playlist.items');
+    Route::post('storeBulkUrl', 'PlaylistItemController@storeBulkUrl')->name('playlist.items.store.bulk.url');
+    Route::post('storeBulkFile', 'PlaylistItemController@storeBulkFile')->name('playlist.items.store.bulk.file');
     Route::resource('playlistItems', 'PlaylistItemController');
 });
 
