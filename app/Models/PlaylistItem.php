@@ -1,38 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Eloquent as Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class PlaylistItem
+ *
  * @package App\Models
  * @version February 21, 2020, 9:44 pm UTC
- *
- * @property \App\Models\Playlist playlist
- * @property integer playlist_id
- * @property string name
- * @property string url
+ * @property Playlist playlist
+ * @property integer  playlist_id
+ * @property string   name
+ * @property string   url
+ * @property string   media
  */
 class PlaylistItem extends Model
 {
     use SoftDeletes;
 
-    public $table = 'playlist_items';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    /**
+     * @var string
+     */
+    public string $table = 'playlist_items';
 
+    /**
+     * @var string
+     */
+    public const CREATED_AT = 'created_at';
 
-    protected $dates = ['deleted_at'];
+    /**
+     * @var string
+     */
+    public const UPDATED_AT = 'updated_at';
 
+    /**
+     * @var array
+     */
+    protected array $dates = ['deleted_at'];
 
-
-    public $fillable = [
-        'playlist_id',
-        'name',
-        'url'
+    /**
+     * @var array
+     */
+    public array $fillable = [
+      'playlist_id',
+      'name',
+      'url',
+      'media_item',
     ];
 
     /**
@@ -40,11 +58,12 @@ class PlaylistItem extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'id' => 'integer',
-        'playlist_id' => 'integer',
-        'name' => 'string',
-        'url' => 'string'
+    protected array $casts = [
+      'id' => 'integer',
+      'playlist_id' => 'integer',
+      'name' => 'string',
+      'url' => 'string',
+      'media' => 'array',
     ];
 
     /**
@@ -52,17 +71,17 @@ class PlaylistItem extends Model
      *
      * @var array
      */
-    public static $rules = [
-        'playlist_id' => 'required',
-        'name' => 'required',
-        'url' => 'required'
+    public static array $rules = [
+      'playlist_id' => 'required',
+      'name' => 'required',
+      'url' => 'required',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      **/
-    public function playlist()
+    public function playlist(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Playlist::class, 'playlist_id');
+        return $this->belongsTo(Playlist::class, 'playlist_id');
     }
 }

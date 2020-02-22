@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMediaToPlaylistItems extends Migration
+class AddsApiRouteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddMediaToPlaylistItems extends Migration
      */
     public function up()
     {
-        Schema::table('playlist_items', function (Blueprint $table) {
-            $table->json('media_item')->nullable();
+        Schema::create('api_routes', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('route');
+            $table->string('description');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddMediaToPlaylistItems extends Migration
      */
     public function down()
     {
-        Schema::table('playlist_items', function (Blueprint $table) {
-            $table->dropColumn('media_item');
-        });
+        Schema::dropIfExists('api_routes');
     }
 }

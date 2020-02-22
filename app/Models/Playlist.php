@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Eloquent as Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -10,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  * @version February 21, 2020, 9:44 pm UTC
  *
- * @property \Illuminate\Database\Eloquent\Collection playlistItems
+ * @property Collection playlistItems
  * @property string name
  * @property string description
  */
@@ -18,19 +22,34 @@ class Playlist extends Model
 {
     use SoftDeletes;
 
-    public $table = 'playlists';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
+    /**
+     * @var string
+     */
+    public string $table = 'playlists';
+
+    /**
+     * @var string
+     */
+    public const CREATED_AT = 'created_at';
+
+    /**
+     * @var string
+     */
+    public const UPDATED_AT = 'updated_at';
 
 
-    protected $dates = ['deleted_at'];
+    /**
+     * @var array
+     */
+    protected array $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'name',
-        'description'
+    /**
+     * @var array
+     */
+    public array $fillable = [
+      'name',
+      'description'
     ];
 
     /**
@@ -38,10 +57,10 @@ class Playlist extends Model
      *
      * @var array
      */
-    protected $casts = [
-        'id' => 'integer',
-        'name' => 'string',
-        'description' => 'string'
+    protected array $casts = [
+      'id' => 'integer',
+      'name' => 'string',
+      'description' => 'string'
     ];
 
     /**
@@ -49,15 +68,15 @@ class Playlist extends Model
      *
      * @var array
      */
-    public static $rules = [
-        'name' => 'required',
-        'description' => 'required'
+    public static array $rules = [
+      'name' => 'required',
+      'description' => 'required'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      **/
-    public function playlistItems()
+    public function playlistItems(): HasMany
     {
         return $this->hasMany(\App\Models\PlaylistItem::class, 'playlist_id');
     }

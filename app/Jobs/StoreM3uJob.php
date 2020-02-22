@@ -6,11 +6,12 @@ namespace App\Jobs;
 
 use App\Helpers\m3u;
 use App\Models\PlaylistItem;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\{Bus\Queueable,
+  Contracts\Queue\ShouldQueue,
+  Foundation\Bus\Dispatchable,
+  Queue\InteractsWithQueue,
+  Queue\SerializesModels,
+  Support\Facades\Log};
 
 /**
  * Class StoreM3uJob
@@ -62,12 +63,16 @@ class StoreM3uJob implements ShouldQueue
      */
     private function storeMedia(int $playlistId, array $m3u8): void
     {
+        if (config('logging.channels.media.active')) {
+            Log::channel('media')->info('Uploaded Media', $m3u8);
+        }
+
         PlaylistItem::updateOrCreate(
           [
             'playlist_id' => $playlistId,
             'name' => $m3u8['tvtitle'],
             'url' => $m3u8['tvmedia'],
-            'media_item' => json_encode($m3u8, JSON_THROW_ON_ERROR, 512),
+            'media_item' => json_encode($m3u8),
           ]
         );
     }

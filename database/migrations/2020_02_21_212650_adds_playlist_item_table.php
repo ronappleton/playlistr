@@ -18,6 +18,8 @@ class AddsPlaylistItemTable extends Migration
             $table->unsignedBigInteger('playlist_id');
             $table->string('name');
             $table->string('url');
+            $table->json('media_item')->nullable();
+            $table->boolean('active')->default(1);
 
             $table->foreign('playlist_id')
               ->references('id')
