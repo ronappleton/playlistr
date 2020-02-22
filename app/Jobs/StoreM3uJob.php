@@ -67,6 +67,7 @@ class StoreM3uJob implements ShouldQueue
             'playlist_id' => $playlistId,
             'name' => $m3u8['tvtitle'],
             'url' => $m3u8['tvmedia'],
+            'media_item' => json_encode($m3u8, JSON_THROW_ON_ERROR, 512),
           ]
         );
     }
