@@ -51,25 +51,23 @@ class StoreM3uJob implements ShouldQueue
     public function handle(): void
     {
         $media = new m3u($this->source);
-        foreach ($media->yieldMedia() as $m3u) {
-            $this->storeMedia($this->playlistId, $m3u);
+        foreach ($media->yieldMedia() as $m3u8) {
+            $this->storeMedia($this->playlistId, $m3u8);
         }
     }
 
     /**
-     * @param int $playlistId
-     * @param m3u $media
+     * @param int   $playlistId
+     * @param array $m3u8
      */
-    private function storeMedia(int $playlistId, m3u $media): void
+    private function storeMedia(int $playlistId, array $m3u8): void
     {
-        foreach ($media->yieldMedia() as $playlistItem) {
-            PlaylistItem::updateOrCreate(
-              [
-                'playlist_id' => $playlistId,
-                'name' => $playlistItem['tvtitle'],
-                'url' => $playlistItem['tvmedia'],
-              ]
-            );
-        }
+        PlaylistItem::updateOrCreate(
+          [
+            'playlist_id' => $playlistId,
+            'name' => $m3u8['tvtitle'],
+            'url' => $m3u8['tvmedia'],
+          ]
+        );
     }
 }
