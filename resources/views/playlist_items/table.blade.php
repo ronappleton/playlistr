@@ -2,7 +2,8 @@
     <table class="table" id="playlistItems-table">
         <thead>
             <tr>
-                <th>Playlist Id</th>
+              <th>Item Id</th>
+                <th>Playlist</th>
         <th>Name</th>
         <th>Url</th>
                 <th colspan="3">Action</th>
@@ -11,7 +12,8 @@
         <tbody>
         @foreach($playlistItems as $playlistItem)
             <tr>
-                <td>{{ $playlistItem->playlist_id }}</td>
+                <td>{{ $playlistItem->id }}</td>
+                <td>{{ $playlistItem->playlist->name }}</td>
             <td>{{ $playlistItem->name }}</td>
             <td>{{ $playlistItem->url }}</td>
                 <td>
@@ -26,5 +28,6 @@
             </tr>
         @endforeach
         </tbody>
+      <tfoot>{{ $playlistItems->links() }}</tfoot>
     </table>
 </div>

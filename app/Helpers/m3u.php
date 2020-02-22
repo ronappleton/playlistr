@@ -33,6 +33,8 @@ class m3u
      */
     public function __construct(string $source)
     {
+        ini_set('memory_limit', '2G');
+        ini_set('max_execution_time', '0');
         $this->getSource($source);
         $this->clean();
         $this->gatherData();

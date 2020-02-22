@@ -1,20 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePlaylistRequest;
 use App\Http\Requests\UpdatePlaylistRequest;
 use App\Repositories\PlaylistRepository;
-use App\Http\Controllers\AppBaseController;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Flash;
+use Illuminate\Routing\Redirector;
+use Illuminate\View\View;
 use Response;
 
+/**
+ * Class PlaylistController
+ *
+ * @package App\Http\Controllers
+ */
 class PlaylistController extends AppBaseController
 {
-    /** @var  PlaylistRepository */
-    private $playlistRepository;
+    /**
+     * @var  PlaylistRepository
+     */
+    private PlaylistRepository $playlistRepository;
 
+    /**
+     * PlaylistController constructor.
+     *
+     * @param PlaylistRepository $playlistRepo
+     */
     public function __construct(PlaylistRepository $playlistRepo)
     {
         $this->playlistRepository = $playlistRepo;
@@ -23,13 +40,11 @@ class PlaylistController extends AppBaseController
     /**
      * Display a listing of the Playlist.
      *
-     * @param Request $request
-     *
-     * @return Response
+     * @return Factory|View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $playlists = $this->playlistRepository->all();
+        $playlists = $this->playlistRepository->paginate(50);
 
         return view('playlists.index')
             ->with('playlists', $playlists);
@@ -38,7 +53,7 @@ class PlaylistController extends AppBaseController
     /**
      * Show the form for creating a new Playlist.
      *
-     * @return Response
+     * @return Factory|View
      */
     public function create()
     {
@@ -49,14 +64,13 @@ class PlaylistController extends AppBaseController
      * Store a newly created Playlist in storage.
      *
      * @param CreatePlaylistRequest $request
-     *
-     * @return Response
+     * @return RedirectResponse|Redirector|Response
      */
     public function store(CreatePlaylistRequest $request)
     {
         $input = $request->all();
 
-        $playlist = $this->playlistRepository->create($input);
+        $this->playlistRepository->create($input);
 
         Flash::success('Playlist saved successfully.');
 
@@ -67,8 +81,7 @@ class PlaylistController extends AppBaseController
      * Display the specified Playlist.
      *
      * @param int $id
-     *
-     * @return Response
+     * @return RedirectResponse|Redirector|Factory|View
      */
     public function show($id)
     {
@@ -87,8 +100,7 @@ class PlaylistController extends AppBaseController
      * Show the form for editing the specified Playlist.
      *
      * @param int $id
-     *
-     * @return Response
+     * @return RedirectResponse|Redirector|Factory|View
      */
     public function edit($id)
     {
@@ -108,8 +120,7 @@ class PlaylistController extends AppBaseController
      *
      * @param int $id
      * @param UpdatePlaylistRequest $request
-     *
-     * @return Response
+     * @return RedirectResponse|Redirector
      */
     public function update($id, UpdatePlaylistRequest $request)
     {
@@ -121,7 +132,7 @@ class PlaylistController extends AppBaseController
             return redirect(route('playlists.index'));
         }
 
-        $playlist = $this->playlistRepository->update($request->all(), $id);
+        $this->playlistRepository->update($request->all(), $id);
 
         Flash::success('Playlist updated successfully.');
 
@@ -132,10 +143,8 @@ class PlaylistController extends AppBaseController
      * Remove the specified Playlist from storage.
      *
      * @param int $id
-     *
-     * @throws \Exception
-     *
-     * @return Response
+     * @return RedirectResponse|Redirector
+     * @throws Exception
      */
     public function destroy($id)
     {

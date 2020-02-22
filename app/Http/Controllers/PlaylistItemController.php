@@ -2,24 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\m3u;
 use App\Http\Requests\CreatePlaylistItemRequest;
 use App\Http\Requests\UpdatePlaylistItemRequest;
 use App\Http\Requests\UploadM3uFileRequest;
 use App\Http\Requests\UploadM3uUrlRequest;
+use App\Jobs\StoreM3uJob;
 use App\Models\PlaylistItem;
 use App\Repositories\PlaylistItemRepository;
+use Exception;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Flash;
+use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Response;
 
+/**
+ * Class PlaylistItemController
+ *
+ * @package App\Http\Controllers
+ */
 class PlaylistItemController extends AppBaseController
 {
-    /** @var  PlaylistItemRepository */
-    private $playlistItemRepository;
+    /**
+     * @var  PlaylistItemRepository
+     */
+    private PlaylistItemRepository $playlistItemRepository;
 
+    /**
+     * PlaylistItemController constructor.
+     *
+     * @param PlaylistItemRepository $playlistItemRepo
+     */
     public function __construct(PlaylistItemRepository $playlistItemRepo)
     {
         $this->playlistItemRepository = $playlistItemRepo;
@@ -28,20 +42,24 @@ class PlaylistItemController extends AppBaseController
     /**
      * Display a listing of the PlaylistItem.
      *
-     * @param Request $request
      * @return Factory|View
      */
-    public function index(Request $request)
+    public function index()
     {
-        $playlistItems = $this->playlistItemRepository->all();
+        $playlistItems = $this->playlistItemRepository->paginate(50);
 
         return view('playlist_items.index')
           ->with('playlistItems', $playlistItems);
     }
 
+    /**
+     * @param $playlistId
+     * @return Factory|View
+     */
     public function items($playlistId)
     {
-        $playlistItems = $this->playlistItemRepository->allQuery(['playlist_id' => $playlistId])->get();
+        $playlistItems = PlaylistItem::where('playlist_id', $playlistId)->with('playlist')->paginate(50);
+        $playlistItems = $this->playlistItemRepository->allQuery(['playlist_id' => $playlistId])->paginate(50);
 
         return view('playlist_items.index')
           ->with('playlistItems', $playlistItems)
@@ -51,7 +69,7 @@ class PlaylistItemController extends AppBaseController
     /**
      * Show the form for creating a new PlaylistItem.
      *
-     * @return Response
+     * @return Factory|View|Response
      */
     public function create()
     {
@@ -62,49 +80,54 @@ class PlaylistItemController extends AppBaseController
      * Store a newly created PlaylistItem in storage.
      *
      * @param CreatePlaylistItemRequest $request
-     * @return Response
+     * @return RedirectResponse|Redirector|Response
      */
     public function store(CreatePlaylistItemRequest $request)
     {
         $input = $request->all();
 
-        $playlistItem = $this->playlistItemRepository->create($input);
+        $this->playlistItemRepository->create($input);
 
         Flash::success('Playlist Item saved successfully.');
 
         return redirect(route('playlistItems.index'));
     }
 
+    /**
+     * @param UploadM3uUrlRequest $m3URequest
+     * @return RedirectResponse|Redirector
+     */
     public function storeBulkUrl(UploadM3UUrlRequest $m3URequest)
     {
-        $media = new m3u($m3URequest->get('m3uUrl'));
-        $this->storeMedia($m3URequest->get('playlist_id'), $media);
+        StoreM3uJob::dispatchAfterResponse(
+          $m3URequest->get('playlist_id'),
+          $m3URequest->get('m3uUrl')
+        );
+
+        Flash::success('Playlist Items upload process started.');
+        return redirect(route('playlist.items', [$m3URequest->get('playlist_id')]));
     }
 
+    /**
+     * @param UploadM3uFileRequest $m3URequest
+     * @return RedirectResponse|Redirector
+     */
     public function storeBulkFile(UploadM3UFileRequest $m3URequest)
     {
-        $media = new m3u($m3URequest->file('m3uFile')->getPathname());
-        $this->storeMedia($m3URequest->get('playlist_id'), $media);
-    }
+        StoreM3uJob::dispatchAfterResponse(
+          $m3URequest->get('playlist_id'),
+          $m3URequest->file('m3uFile')->getPathname()
+        );
 
-    private function storeMedia($playlistId, $media)
-    {
-        foreach ($media->yieldMedia() as $playlistItem) {
-            PlaylistItem::updateOrCreate(
-              [
-                'playlist_id' => $playlistId,
-                'name' => $playlistItem['tvtitle'],
-                'url' => $playlistItem['tvmedia'],
-              ]
-            );
-        }
+        Flash::success('Playlist Items upload process started.');
+        return redirect(route('playlist.items', [$m3URequest->get('playlist_id')]));
     }
 
     /**
      * Display the specified PlaylistItem.
      *
      * @param int $id
-     * @return Response
+     * @return RedirectResponse|Redirector|Factory|View
      */
     public function show($id)
     {
@@ -123,7 +146,7 @@ class PlaylistItemController extends AppBaseController
      * Show the form for editing the specified PlaylistItem.
      *
      * @param int $id
-     * @return Response
+     * @return Factory|RedirectResponse|Redirector|View
      */
     public function edit($id)
     {
@@ -143,7 +166,7 @@ class PlaylistItemController extends AppBaseController
      *
      * @param int                       $id
      * @param UpdatePlaylistItemRequest $request
-     * @return Response
+     * @return RedirectResponse|Redirector
      */
     public function update($id, UpdatePlaylistItemRequest $request)
     {
@@ -155,7 +178,7 @@ class PlaylistItemController extends AppBaseController
             return redirect(route('playlistItems.index'));
         }
 
-        $playlistItem = $this->playlistItemRepository->update($request->all(), $id);
+        $this->playlistItemRepository->update($request->all(), $id);
 
         Flash::success('Playlist Item updated successfully.');
 
@@ -166,8 +189,8 @@ class PlaylistItemController extends AppBaseController
      * Remove the specified PlaylistItem from storage.
      *
      * @param int $id
-     * @return Response
-     * @throws \Exception
+     * @return RedirectResponse|Redirector
+     * @throws Exception
      */
     public function destroy($id)
     {
