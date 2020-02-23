@@ -6,11 +6,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePlaylistRequest;
 use App\Http\Requests\UpdatePlaylistRequest;
+use App\Models\Playlist;
 use App\Repositories\PlaylistRepository;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Flash;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Response;
@@ -47,7 +49,7 @@ class PlaylistController extends AppBaseController
         $playlists = $this->playlistRepository->paginate(50);
 
         return view('playlists.index')
-            ->with('playlists', $playlists);
+          ->with('playlists', $playlists);
     }
 
     /**
@@ -118,7 +120,7 @@ class PlaylistController extends AppBaseController
     /**
      * Update the specified Playlist in storage.
      *
-     * @param int $id
+     * @param int                   $id
      * @param UpdatePlaylistRequest $request
      * @return RedirectResponse|Redirector
      */
@@ -161,5 +163,19 @@ class PlaylistController extends AppBaseController
         Flash::success('Playlist deleted successfully.');
 
         return redirect(route('playlists.index'));
+    }
+
+    public function toggle(Request $request)
+    {
+        $this->validate(
+          $request,
+          [
+            'playlistId' => 'required|integer|exists:playlists,id',
+          ]
+        );
+
+        $this->playlistRepository->find($request->playlistId)->toggleActive()->save();
+
+        return response()->json(['success']);
     }
 }

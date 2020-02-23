@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string   name
  * @property string   url
  * @property string   media
+ * @property bool     active
  */
 class PlaylistItem extends Model
 {
@@ -51,6 +52,7 @@ class PlaylistItem extends Model
       'name',
       'url',
       'media_item',
+      'active',
     ];
 
     /**
@@ -64,6 +66,7 @@ class PlaylistItem extends Model
       'name' => 'string',
       'url' => 'string',
       'media' => 'array',
+      'active' => 'bool',
     ];
 
     /**
@@ -83,5 +86,15 @@ class PlaylistItem extends Model
     public function playlist(): BelongsTo
     {
         return $this->belongsTo(Playlist::class, 'playlist_id');
+    }
+
+
+    /**
+     * @return $this
+     */
+    public function toggleActive()
+    {
+        $this->active = !$this->active;
+        return $this;
     }
 }

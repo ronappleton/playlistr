@@ -11,12 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Playlist
+ *
  * @package App\Models
  * @version February 21, 2020, 9:44 pm UTC
- *
  * @property Collection playlistItems
- * @property string name
- * @property string description
+ * @property string     name
+ * @property string     description
+ * @property bool       active
  */
 class Playlist extends Model
 {
@@ -49,7 +50,8 @@ class Playlist extends Model
      */
     public array $fillable = [
       'name',
-      'description'
+      'description',
+      'active',
     ];
 
     /**
@@ -60,7 +62,8 @@ class Playlist extends Model
     protected array $casts = [
       'id' => 'integer',
       'name' => 'string',
-      'description' => 'string'
+      'description' => 'string',
+      'active' => 'bool',
     ];
 
     /**
@@ -70,7 +73,7 @@ class Playlist extends Model
      */
     public static array $rules = [
       'name' => 'required',
-      'description' => 'required'
+      'description' => 'required',
     ];
 
     /**
@@ -79,5 +82,14 @@ class Playlist extends Model
     public function playlistItems(): HasMany
     {
         return $this->hasMany(\App\Models\PlaylistItem::class, 'playlist_id');
+    }
+
+    /**
+     * @return $this
+     */
+    public function toggleActive()
+    {
+        $this->active = !$this->active;
+        return $this;
     }
 }

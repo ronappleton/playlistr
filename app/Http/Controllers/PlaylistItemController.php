@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Flash;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Response;
@@ -207,5 +208,20 @@ class PlaylistItemController extends AppBaseController
         Flash::success('Playlist Item deleted successfully.');
 
         return redirect(route('playlistItems.index'));
+    }
+
+
+    public function toggle(Request $request)
+    {
+        $this->validate(
+          $request,
+          [
+            'itemId' => 'required|integer|exists:playlists,id',
+          ]
+        );
+
+        $this->playlistItemRepository->find($request->itemId)->toggleActive()->save();
+
+        return response()->json(['success']);
     }
 }

@@ -2,6 +2,7 @@
     <table class="table" id="playlists-table">
         <thead>
             <tr>
+                <th style="width: 8em;">Active (click)</th>
                 <th>Name</th>
         <th>Description</th>
                 <th colspan="3">Action</th>
@@ -10,6 +11,9 @@
         <tbody>
         @foreach($playlists as $playlist)
             <tr>
+              <td>
+                @activator(['active' => $playlist->active, 'id' => $playlist->id])@endactivator
+              </td>
                 <td>{{ $playlist->name }}</td>
             <td>{{ $playlist->description }}</td>
                 <td>
@@ -27,3 +31,5 @@
       <tfoot>{{ $playlists->links() }}</tfoot>
     </table>
 </div>
+@activatorScript(['url' => 'playlists/toggle', 'idName' => 'playlistId'])
+@endactivatorScript

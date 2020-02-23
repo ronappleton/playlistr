@@ -20,15 +20,14 @@ Auth::routes(['verify' => true]);
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', 'HomeController@index')->middleware('verified');
     Route::resource('playlists', 'PlaylistController');
+    Route::post('playlists/toggle', 'PlaylistController@toggle');
+    Route::post('playlistItems/toggle', 'PlaylistItemController@toggle');
     Route::get('playlistItems/{playlistId}', 'PlaylistItemController@items')
       ->name('playlist.items');
     Route::post('storeBulkUrl', 'PlaylistItemController@storeBulkUrl')->name('playlist.items.store.bulk.url');
     Route::post('storeBulkFile', 'PlaylistItemController@storeBulkFile')->name('playlist.items.store.bulk.file');
     Route::resource('playlistItems', 'PlaylistItemController');
-});
-
-Route::get('m3u', function () {
-    $media = new \App\Helpers\m3u();
-    return response()->json($media->getMedia());
+    Route::post('apiRoutes/toggle', 'ApiRouteController@toggle');
+    Route::resource('apiRoutes', 'ApiRouteController');
 });
 

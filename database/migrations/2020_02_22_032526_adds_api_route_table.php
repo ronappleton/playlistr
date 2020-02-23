@@ -17,7 +17,9 @@ class AddsApiRouteTable extends Migration
             $table->bigIncrements('id');
             $table->string('route');
             $table->string('description');
+            $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
