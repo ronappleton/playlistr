@@ -16,8 +16,9 @@ class AddsApiRouteTable extends Migration
         Schema::create('api_routes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('route');
+            $table->string('regex');
             $table->string('description');
-            $table->boolean('active');
+            $table->boolean('active')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });
