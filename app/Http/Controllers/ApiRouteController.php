@@ -162,7 +162,7 @@ class ApiRouteController extends AppBaseController
             'routeId' => 'required|integer|exists:api_routes,id'
           ]);
 
-        ApiRoute::find($request->routeId)->toggleActive()->save();
+        $this->apiRouteRepository->find($request->routeId)->toggleActive()->save();
 
         return response()->json(['success']);
     }
